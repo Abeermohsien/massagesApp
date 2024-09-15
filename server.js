@@ -87,3 +87,31 @@ io.on('connection', (socket) => {
 app.listen(5000, () => {
   console.log('Server is listening on port 3000');
 });
+const messageForm = document.querySelector('#message-form');
+messageForm.addEventListener('submit', (event) => {
+
+  event.preventDefault();
+  const messageInput = document.querySelector('#message-input');
+
+  const message = {
+    text: messageInput.value
+  };
+
+  socket.emit('sendMessage', message);
+  messageInput.value = '';
+
+});
+socket.on('newMessage', (message) => {
+
+  const messagesList = document.querySelector('#messages-list');
+
+  const messageItem = document.createElement('li');
+
+  messageItem.textContent = `${message.userId}: ${message.text}`;
+
+  messagesList.appendChild(messageItem);
+
+});
+socket.on('disconnect', () => {
+  // Update UI to indicate that the user is disconnected
+});
